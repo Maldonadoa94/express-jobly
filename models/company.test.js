@@ -8,6 +8,7 @@ const {
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
+  testJobIds,
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -69,6 +70,26 @@ describe("findAll", function () {
         numEmployees: 1,
         logoUrl: "http://c1.img",
       },
+      {
+        handle: "c2",
+        name: "C2",
+        description: "Desc2",
+        numEmployees: 2,
+        logoUrl: "http://c2.img",
+      },
+      {
+        handle: "c3",
+        name: "C3",
+        description: "Desc3",
+        numEmployees: 3,
+        logoUrl: "http://c3.img",
+      },
+    ]);
+  });
+
+  test("works: by min employees", async function () {
+    let companies = await Company.findAll({ minEmployees: 2 });
+    expect(companies).toEqual([
       {
         handle: "c2",
         name: "C2",
@@ -159,6 +180,12 @@ describe("get", function () {
       description: "Desc1",
       numEmployees: 1,
       logoUrl: "http://c1.img",
+      jobs: [
+        { id: testJobIds[0], title: "Job1", salary: 100, equity: "0.1" },
+        { id: testJobIds[1], title: "Job2", salary: 200, equity: "0.2" },
+        { id: testJobIds[2], title: "Job3", salary: 300, equity: "0" },
+        { id: testJobIds[3], title: "Job4", salary: null, equity: null },
+      ],
     });
   });
 
