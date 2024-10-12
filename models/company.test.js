@@ -59,7 +59,7 @@ describe("create", function () {
 /************************************** findAll */
 
 describe("findAll", function () {
-  test("works: no filter", async function () {
+  test("works: all", async function () {
     let companies = await Company.findAll();
     expect(companies).toEqual([
       {
@@ -84,6 +84,67 @@ describe("findAll", function () {
         logoUrl: "http://c3.img",
       },
     ]);
+  });
+
+  test("works: by max employees", async function () {
+    let companies = await Company.findAll({ maxEmployees: 2 });
+    expect(companies).toEqual([
+      {
+        handle: "c1",
+        name: "C1",
+        description: "Desc1",
+        numEmployees: 1,
+        logoUrl: "http://c1.img",
+      },
+      {
+        handle: "c2",
+        name: "C2",
+        description: "Desc2",
+        numEmployees: 2,
+        logoUrl: "http://c2.img",
+      },
+    ]);
+  });
+
+  test("works: by min-max employees", async function () {
+    let companies = await Company.findAll(
+        { minEmployees: 1, maxEmployees: 1 });
+    expect(companies).toEqual([
+      {
+        handle: "c1",
+        name: "C1",
+        description: "Desc1",
+        numEmployees: 1,
+        logoUrl: "http://c1.img",
+      },
+    ]);
+  });
+
+  test("works: by name", async function () {
+    let companies = await Company.findAll({ name: "1" });
+    expect(companies).toEqual([
+      {
+        handle: "c1",
+        name: "C1",
+        description: "Desc1",
+        numEmployees: 1,
+        logoUrl: "http://c1.img",
+      },
+    ]);
+  });
+
+  test("works: empty list on nothing found", async function () {
+    let companies = await Company.findAll({ name: "nope" });
+    expect(companies).toEqual([]);
+  });
+
+  test("bad request if invalid min > max", async function () {
+    try {
+      await Company.findAll({ minEmployees: 10, maxEmployees: 1 });
+      fail();
+    } catch (err) {
+      expect(err instanceof BadRequestError).toBeTruthy();
+    }
   });
 });
 
