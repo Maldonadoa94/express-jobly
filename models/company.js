@@ -44,20 +44,23 @@ class Company {
     return company;
   }
 
-  /** Find all companies.
+  /** Find all companies (optional filter on searchFilters).
+   *
+   * searchFilters (all optional):
+   * - minEmployees
+   * - maxEmployees
+   * - name (will find case-insensitive, partial matches)
    *
    * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
    * */
 
   static async findAll(searchFilters = {}) {
-    let query = 
-          `SELECT handle,
-                  name,
-                  description,
-                  num_employees AS "numEmployees",
-                  logo_url AS "logoUrl"
-           FROM companies
-           ORDER BY name`;
+    let query = `SELECT handle,
+                        name,
+                        description,
+                        num_employees AS "numEmployees",
+                        logo_url AS "logoUrl"
+                 FROM companies`;
     let whereExpressions = [];
     let queryValues = [];
 
@@ -92,7 +95,6 @@ class Company {
     // Finalize query and return results
 
     query += " ORDER BY name";
-
     const companiesRes = await db.query(query, queryValues);
     return companiesRes.rows;
   }
